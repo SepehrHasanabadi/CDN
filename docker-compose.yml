@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  lua:
+    image: "openresty/openresty:alpine"
+    restart: always
+    ports:
+      - 8181:8181
+    volumes:
+      - ./nginx:/usr/local/openresty/nginx/conf/
+      - ./lua:/usr/local/openresty/lua
+
