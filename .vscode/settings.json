@@ -1,0 +1,11 @@
+{
+  "pylint.importStrategy": "fromEnvironment",
+  "pylint.cwd": "${workspaceFolder}",
+  "pylint.path": [
+    "./venv/bin/pylint"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.unusedImports": "explicit"
+  },
+  "python.analysis.autoImportCompletions": true
+}

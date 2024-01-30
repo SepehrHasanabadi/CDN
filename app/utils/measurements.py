@@ -1,6 +1,6 @@
 import time
 import psutil
-from abstracts import MinificationStrategy
+from app.utils.base import MinificationStrategy
 
 
 # Decorator for measuring time

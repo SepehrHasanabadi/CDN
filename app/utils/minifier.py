@@ -1,6 +1,7 @@
-from abstracts import MinificationStrategy
-from measurements import MeasurementProxy
 import magic
+from app.utils.measurements import MeasurementProxy
+
+from app.utils.base import MinificationStrategy
 
 
 # Concrete strategies
