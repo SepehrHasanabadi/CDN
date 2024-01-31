@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.v1.routers import user
+from api.v1.routers import user
+from scripts.init_db import init as init_db
 
 app = FastAPI()
 
@@ -17,8 +18,4 @@ app.add_middleware(
 # Include routers from version 1 (v1)
 app.include_router(user.router, prefix="/v1", tags=["users"])
 
-if __name__ == "__main__":
-    import uvicorn
-
-    # Run the FastAPI application using Uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+app.add_event_handler("startup", init_db)

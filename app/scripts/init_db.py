@@ -1,8 +1,9 @@
-from app.database.base import Base, SessionLocal
-from app.api.v1.models.user import User
+from database.base import Base, SessionLocal
+from api.v1.models.user import User
+from core.security import get_password_hash
 
 
-def init_db():
+def init():
     # Create all tables defined in the models
     Base.metadata.create_all(bind=SessionLocal().bind)
 
@@ -14,14 +15,15 @@ def create_default_user():
     db = SessionLocal()
 
     # Check if the default user already exists
-    existing_user = db.query(User).filter_by(username="admin").first()
+    existing_user = db.query(User).filter_by(username="parspack").first()
     if not existing_user:
         # Replace with your password hashing logic
-        hashed_password = "hashed_password"
+        
+        hashed_password = get_password_hash("Twu5hKXXKZEQaJ")
 
         # Create the default user
         default_user = User(
-            username="admin", email="admin@example.com", password=hashed_password
+            username="parspack", password=hashed_password
         )
         db.add(default_user)
         db.commit()
@@ -30,6 +32,3 @@ def create_default_user():
 
     db.close()
 
-
-if __name__ == "__main__":
-    init_db()

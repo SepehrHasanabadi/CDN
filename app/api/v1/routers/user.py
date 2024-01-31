@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..crud.user import create_user_in_db, get_user_by_username
-from app.api.v1.models.user import UserCreate, UserCredential
-from app.core.security import create_access_token, get_password_hash, verify_password
-from app.database.session import get_db
+from ..schemas.user import UserCreate, UserCredential
+from core.security import create_access_token, get_password_hash, verify_password
+from database.session import get_db
 
 router = APIRouter()
 
 
-@router.post("/users/")
+@router.post("/signup/")
 async def create_user(user: UserCreate, db: Session = Depends(get_db)):
     # Check if the username already exists in the database
     # Perform necessary validation logic (e.g., password complexity requirements)
@@ -22,12 +22,9 @@ async def create_user(user: UserCreate, db: Session = Depends(get_db)):
 
 @router.post("/token/")
 async def token(user: UserCredential, db: Session = Depends(get_db)):
-    # Check if the username already exists in the database
-    # Perform necessary validation logic (e.g., password complexity requirements)
-
     # Hash the password before storing it in the database
     db_user = get_user_by_username(db, user.username)
-    verified = verify_password(db_user.password, user.password)
+    verified = verify_password(user.password, db_user.password)
     if not verified:
         return None
     access_token = create_access_token(data={"sub": db_user.username})

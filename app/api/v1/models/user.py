@@ -1,20 +1,11 @@
-from pydantic import BaseModel
+from database.base import Base
+from sqlalchemy import Column, Integer, String, TIMESTAMP, text
 
 
-class UserBase(BaseModel):
-    username: str
+class User(Base):
+    __tablename__ = "users"
 
-
-class UserCreate(UserBase):
-    password: str
-
-
-class User(UserBase):
-    class Config:
-        orm_mode = True
-
-
-class UserCredential(UserBase):
-    password: str
-    class Config:
-        orm_mode = True
+    id = Column(Integer,primary_key=True,nullable=False)
+    username = Column(String,nullable=False)
+    password = Column(String,nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))

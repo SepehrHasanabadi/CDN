@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.api.v1.models.user import User, UserCredential
+from ..models.user import User
 
 
 def create_user_in_db(db: Session, username: str, password: str):
@@ -14,4 +14,4 @@ def create_user_in_db(db: Session, username: str, password: str):
 
 
 def get_user_by_username(db: Session, username: str):
-    return db.query(UserCredential).filter(UserCredential.username == username).first()
+    return db.query(User).filter(User.username == username).first()

@@ -1,7 +1,7 @@
 import magic
-from app.utils.measurements import MeasurementProxy
+from services.measurements import MeasurementProxy
 
-from app.utils.base import MinificationStrategy
+from services.base import MinificationStrategy
 
 
 # Concrete strategies

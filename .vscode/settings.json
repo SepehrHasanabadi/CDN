@@ -1,6 +1,6 @@
 {
   "pylint.importStrategy": "fromEnvironment",
-  "pylint.cwd": "${workspaceFolder}",
+  "pylint.cwd": "${workspaceFolder}/app",
   "pylint.path": [
     "./venv/bin/pylint"
   ],
