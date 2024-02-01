@@ -10,13 +10,12 @@
       "request": "launch",
       "module": "uvicorn",
       "args": [
-        "main:app",
+        "app.main:app",
         "--reload",
         "--port",
         "8002"
       ],
       "jinja": true,
-      "cwd": "${workspaceFolder}/app",
       "envFile": "${workspaceFolder}/.env",
       "justMyCode": true
     }

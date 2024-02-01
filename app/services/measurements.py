@@ -1,6 +1,6 @@
 import time
 import psutil
-from services.base import MinificationStrategy
+from app.services.base import MinificationStrategy
 
 
 # Decorator for measuring time
@@ -15,7 +15,7 @@ class TimeMeasurement(MinificationStrategy):
         return result, end_time - start_time
 
 
-# Decorator for measuring CPU usage
+# Decorator for measuring Memory usage
 class MemoryMeasurement(MinificationStrategy):
     def __init__(self, real_strategy):
         self._real_strategy = real_strategy
@@ -31,19 +31,15 @@ class MemoryMeasurement(MinificationStrategy):
 
 # Structural: Proxy pattern
 class MeasurementProxy(MinificationStrategy):
-    def __init__(self, real_strategy, measure_callback):
-        self.measure_callback = measure_callback
+    def __init__(
+        self,
+        real_strategy,
+    ):
         self._time_proxy = TimeMeasurement(real_strategy)
         self._ram_proxy = MemoryMeasurement(real_strategy)
 
     def minify(self, content):
-        # Run both time and CPU measurements
         ram_result, memory_usage = self._ram_proxy.minify(content)
         result, spent_time = self._time_proxy.minify(ram_result)
-        
-        ram_usage_value = f"{memory_usage / (1024 * 1024):.2f} MB"
-        spent_time_value = f"{spent_time:.6f}"
-        if self.measure_callback:
-            self.measure_callback(ram_usage_value, spent_time_value)
 
-        return result
+        return result, memory_usage, spent_time

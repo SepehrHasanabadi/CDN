@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     db_password: str = "password"
     db_port: str = 5432
     db_name: str = "postgres"
+    upload_base_file: str = "/tmp/"
 
     class Config:
-        env_file = ".env"
+        env_file = "./app/.env"

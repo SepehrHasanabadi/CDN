@@ -1,34 +1,30 @@
-import magic
-from services.measurements import MeasurementProxy
-
-from services.base import MinificationStrategy
-
+import os
+from app.services.base import MinificationStrategy
+from PIL import Image
+from io import BytesIO
 
 # Concrete strategies
 class CssMinificationStrategy(MinificationStrategy):
     def minify(self, content):
-        return content.replace(" ", "").replace("\n", "")
+        content = content.decode()
+        return content.replace(" ", "").replace("\n", "").encode()
 
 
 class JsMinificationStrategy(MinificationStrategy):
     def minify(self, content):
-        return content.replace(" ", "").replace("\n", "").replace("\t", "")
+        content = content.decode()
+        return content.replace(" ", "").replace("\n", "").replace("\t", "").encode()
 
 
-class Minifier:
-    def __init__(self, minification_strategy):
-        self.minification_strategy = minification_strategy
+class ImgMinificationStrategy(MinificationStrategy):
+    def minify(self, content):
+        quality = 80
+        with Image.open(BytesIO(content)) as img:
+            webp_bytesio = BytesIO()
+            img.save(webp_bytesio, "WEBP", quality=quality)
+            webp_bytes = webp_bytesio.getvalue()
 
-    def set_strategy(self, minification_strategy):
-        self.minification_strategy = minification_strategy
-
-    def minify_file(self, file_path):
-        with open(file_path, "r") as file:
-            content = file.read()
-            minified_content = self.minification_strategy.minify(content)
-            # Save the minified content back to the file
-            with open(file_path, "w") as output_file:
-                output_file.write(minified_content)
+        return webp_bytes
 
 
 # Creational: Factory Method pattern
@@ -38,22 +34,21 @@ class MinificationStrategyFactory:
             return CssMinificationStrategy()
         elif strategy_type == "js":
             return JsMinificationStrategy()
+        elif strategy_type == "img":
+            return ImgMinificationStrategy()
         else:
             raise ValueError("Invalid strategy type")
 
 
-class FileMinifier:
-    def __init__(self, file_name, measure_callback):
-        self.file_name = file_name
-        self.measure_callback = measure_callback
+class Minifier:
+    def __init__(self, minification_proxy):
+        self.minification_proxy = minification_proxy
 
-    def minify_file(self, file_path):
-        strategy_factory = MinificationStrategyFactory()
-        mime = magic.Magic()
-        file_format = mime.from_file(file_path)
-        if file_format not in ["css", "js"]:
-            raise ValueError("Format not supported")
-        strategy = strategy_factory.create_strategy(file_format)
-        strategy_proxy = MeasurementProxy(strategy, self.measure_callback)
-        minifier = Minifier(strategy_proxy)
-        minifier.minify_file(file_path)
+    def minify_file(self, file, file_path):
+        file.file.seek(0)
+        content = file.file.read()
+        content, memory_usage, spent_time = self.minification_proxy.minify(content)
+        with open(file_path, "wb") as output_file:
+            output_file.write(content)
+        file_size = os.path.getsize(file_path)
+        return file_size, memory_usage, spent_time

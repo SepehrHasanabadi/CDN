@@ -1,16 +1,11 @@
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import HTTPException, Header, status
 from jose import JWTError, jwt
-from core.config import Settings
+from app.core.config import Settings
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-
-def get_token_header(token: str = Depends(oauth2_scheme)):
-    return token
+settings = Settings()
 
 
-def verify_token(token: str = Depends(get_token_header)):
+def verify_token(token: str = Header(...)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -19,8 +14,8 @@ def verify_token(token: str = Depends(get_token_header)):
 
     try:
         payload = jwt.decode(
-            token, Settings.secret_key, algorithms=[Settings.algorithm]
+            token, settings.secret_key, algorithms=[settings.algorithm]
         )
-        return payload
+        return payload["sub"]
     except JWTError:
         raise credentials_exception

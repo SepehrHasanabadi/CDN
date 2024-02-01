@@ -1,6 +1,10 @@
+from datetime import datetime
 from pydantic import BaseModel
 
 
 class File(BaseModel):
-    name: str
-    description: str
+    size: str
+    minify_duration: str
+    minify_ram_consumption: str
+    type: str
+    created_at: datetime

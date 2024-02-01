@@ -16,5 +16,6 @@ class User(UserBase):
 
 class UserCredential(UserBase):
     password: str
+
     class Config:
         orm_mode = True

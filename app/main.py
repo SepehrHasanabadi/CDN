@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.v1.routers import user
-from scripts.init_db import init as init_db
+from app.api.v1.routers import user
+from app.api.v1.routers import file
+from app.scripts.init_db import init as init_db
 
 app = FastAPI()
 
@@ -15,7 +16,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers from version 1 (v1)
-app.include_router(user.router, prefix="/v1", tags=["users"])
+verson_1 = "/v1"
+
+app.include_router(user.router, prefix=verson_1, tags=["users"])
+app.include_router(file.router, prefix=verson_1, tags=["files"])
 
 app.add_event_handler("startup", init_db)
