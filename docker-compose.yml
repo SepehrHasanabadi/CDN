@@ -34,7 +34,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./nginx:/usr/local/openresty/nginx/conf/
+      - ./nginx:/usr/local/openresty/nginx
       - ./lua:/usr/local/openresty/lua
     networks:
       - web_network
