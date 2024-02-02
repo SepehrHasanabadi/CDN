@@ -5,9 +5,12 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./app:/app
+      - ./app:/app/app
+      - /opt:/opt
     depends_on:
       - db
+    env_file:
+      - ./app/.env
     networks:
       - db_network
       - web_network
