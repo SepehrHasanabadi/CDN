@@ -23,7 +23,7 @@ The Postman collection can be found in the `postman` directory. It's recommended
 ### Token Retrieval
 
 - **Endpoint:** `/v1/token`
-- **Description:** Retrieve a token to send requests for saving files.
+- **Description:** Retrieve a token to perform the file requests.
 
 ### File Storage
 
@@ -41,7 +41,7 @@ The Postman collection can be found in the `postman` directory. It's recommended
     "type": ".png",
     "created_at": "2024-02-02T09:29:06.135570Z"
   }
-- all the files will be stored in the 'upload_base_file' path which is defined in the .env file
+- all the files will be stored in the `upload_base_file` path which is defined in the `.env` file
 - the supported formats for the minification are: 
 ```
 css,
@@ -55,9 +55,15 @@ svg,
 ico
 ```
 - all the image formats will be minfied by WEBP.
-- the minify_duration and minify_ram_consumption fields will be zero if the 'minify' is false. this will store the original file.
+- the `minify_duration` and `minify_ram_consumption` fields are zero if the `minify` is false and it stores the original file.
 
 #### Retrieve Files (GET)
 
 - **Endpoint:** `/v1/cache-file`
-- **Description:** all the user files.
+- **Description:** Get all the user files.
+
+## Lua Logs
+the minification logs are storing in `./nginx/logs/minification.log`
+
+## Test
+run the `pytest` command in the container. the container terminal can be access by running the `docker exec -it <container-id> sh` for its app container.
